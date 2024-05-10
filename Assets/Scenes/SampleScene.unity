@@ -464,7 +464,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 5}
-  m_LocalScale: {x: 90, y: 1, z: 90}
+  m_LocalScale: {x: 100, y: 1, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -512,10 +512,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 828bc15ccd9131a4eb5ee6eeb19e4e96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawMode: 1
+  octaves: 4
+  persistance: 0.3
+  lacunarity: 1
   autoUpdate: 1
-  mapWidth: 90
-  mapHeight: 90
-  noiseScale: 6.91
+  mapWidth: 100
+  mapHeight: 100
+  noiseScale: 25
+  seed: 15
+  offsets: {x: -1.02, y: 0}
+  regions:
+  - names: Water
+    height: 0.2
+    colour: {r: 0.020247431, g: 0.082211375, b: 0.6132076, a: 0}
+  - names: Dirt
+    height: 0.28
+    colour: {r: 0.31132078, g: 0.16624749, b: 0, a: 0}
+  - names: land
+    height: 1
+    colour: {r: 0.082427174, g: 0.30980393, b: 0, a: 0}
 --- !u!4 &935305492
 Transform:
   m_ObjectHideFlags: 0
