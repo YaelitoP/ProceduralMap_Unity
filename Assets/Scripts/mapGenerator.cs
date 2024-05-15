@@ -6,7 +6,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 public class mapGenerator : MonoBehaviour
-{
+{   public const int mapChunkSize = 241;
     public enum DrawMode {NOISE, COLOUR, MESH};
     public DrawMode drawMode;
     public int octaves;
@@ -15,8 +15,8 @@ public class mapGenerator : MonoBehaviour
     public float lacunarity;
    
     public bool autoUpdate;
-    public int mapWidth;
-    public int mapHeight;
+    [Range(0,6)]
+    public int levelOfDetail;
     public float noiseScale;
     public float heightMultiplier;
     public AnimationCurve meshCurve;
@@ -26,21 +26,21 @@ public class mapGenerator : MonoBehaviour
     public TerrainSet[] regions;
 
     public void generateMap(){
-        float[,] noiseMap = noise.generateNoiseMap(mapHeight, mapWidth, seed, noiseScale, octaves, persistance, lacunarity, offsets);
+        float[,] noiseMap = noise.generateNoiseMap (mapChunkSize, mapChunkSize, seed, noiseScale, octaves, persistance, lacunarity, offsets);
 
         mapDisplay display = FindObjectOfType<mapDisplay>();
         
-        Color[] colourMap =  new Color[mapWidth * mapHeight];
+        Color[] colourMap =  new Color [mapChunkSize * mapChunkSize];
 
-        for (int x = 0; x < mapWidth; x++){
-            for (int y = 0; y < mapHeight; y++){
+        for (int x = 0; x < mapChunkSize; x++){
+            for (int y = 0; y < mapChunkSize; y++){
                 float currentHeight = noiseMap[x,y];
 
                 for (int i = 0; i < regions.Length; i++){
 
                     if (currentHeight < regions[i].height){
 
-                        colourMap[y * mapWidth + x] = regions[i].colour;
+                        colourMap[y * mapChunkSize + x] = regions[i].colour;
                         break;
                     }
                 }
@@ -51,10 +51,10 @@ public class mapGenerator : MonoBehaviour
             display.drawTexture(textureCreation.TextureFromHeightMap(noiseMap));
 
         }else if (drawMode == DrawMode.COLOUR){
-            display.drawTexture(textureCreation.TextureFromColourMap(colourMap, mapWidth, mapHeight));
+            display.drawTexture(textureCreation.TextureFromColourMap(colourMap, mapChunkSize, mapChunkSize));
 
         }else if (drawMode == DrawMode.MESH){
-            display.drawMesh(MeshGenerator.generateMesh(noiseMap, heightMultiplier, meshCurve), textureCreation.TextureFromColourMap(colourMap, mapWidth, mapHeight));
+            display.drawMesh(MeshGenerator.generateMesh(noiseMap, heightMultiplier, meshCurve, levelOfDetail), textureCreation.TextureFromColourMap(colourMap, mapChunkSize, mapChunkSize));
 
         }
         
@@ -67,14 +67,8 @@ public class mapGenerator : MonoBehaviour
 
     if (lacunarity < 1){
         lacunarity = 1;}
-
-    if (mapWidth < 1){
-        mapWidth = 1;}
-
-    if (mapHeight < 1){
-        mapHeight = 1;}
-}
-}
+    }
+}   
 
 [System.Serializable]
 public struct TerrainSet{
