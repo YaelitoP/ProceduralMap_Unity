@@ -11,12 +11,12 @@ public class Generate : Editor
         mapGenerator mapGen= (mapGenerator)target;
         if (DrawDefaultInspector ()){
             if (mapGen.autoUpdate){
-                mapGen.generateMap ();
+                mapGen.drawInEditor ();
             }
         } 
 
         if (GUILayout.Button ("Generate")) {
-            mapGen.generateMap ();
+            mapGen.drawInEditor ();
         }
     }
 }

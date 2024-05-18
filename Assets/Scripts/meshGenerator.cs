@@ -5,7 +5,8 @@ using UnityEngine;
 
 public static class MeshGenerator
 {
-    public static MeshData generateMesh(float[,] heightMap, float heightMultiplier, AnimationCurve meshCurve, int levelOfDetail){
+    public static meshData generateMesh(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve, int levelOfDetail){
+        AnimationCurve meshCurve = new AnimationCurve(heightCurve.keys);
         int width = heightMap.GetLength (0);
         int height = heightMap.GetLength (1);
         float topLeftX = (width -1) / -2f;
@@ -15,11 +16,10 @@ public static class MeshGenerator
         int simplification = (levelOfDetail == 0)?1:levelOfDetail * 2;
         int verticesPerLine = (width-1)/simplification+1;
         int vertexIndex = 0;
-        MeshData meshData = new(verticesPerLine, verticesPerLine);
+        meshData meshData = new(verticesPerLine, verticesPerLine);
         
         for (int y = 0; y < height; y += simplification){
             for (int x = 0; x < width; x += simplification){
-            
                 meshData.vertices[vertexIndex] = new Vector3(topLeftX + x, meshCurve.Evaluate(heightMap[x,y]) * heightMultiplier, topLeftZ - y);
                 meshData.uvs[vertexIndex] = new Vector2(x/(float)width, y/(float)height);               
                 
@@ -35,12 +35,12 @@ public static class MeshGenerator
     }
 }
 
-public class MeshData{
+public class meshData{
     public Vector3[] vertices;
     public int[] triangles;
     public Vector2[] uvs;
     int triangleIndex;
-    public MeshData(int meshWidth, int meshHeight){
+    public meshData(int meshWidth, int meshHeight){
         vertices = new Vector3[meshWidth * meshHeight];
         uvs = new Vector2[meshWidth * meshHeight];
         triangles = new int[(meshWidth -1) * (meshHeight -1)*6];
