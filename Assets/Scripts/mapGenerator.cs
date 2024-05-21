@@ -11,6 +11,7 @@ public class mapGenerator : MonoBehaviour
 {   public const int mapChunkSize = 241;
     public enum DrawMode {NOISE, COLOUR, MESH};
     public DrawMode drawMode;
+    public noise.NormalizeMode normalizeMode;
     public int octaves;
     [Range(0,1)]
     public float persistance;
@@ -90,14 +91,15 @@ public class mapGenerator : MonoBehaviour
 
 
     mapData generateMapData(Vector2 center){
-        float[,] noiseMap = noise.generateNoiseMap (mapChunkSize, mapChunkSize, seed, noiseScale, octaves, persistance, lacunarity, center + offsets);
+        float[,] noiseMap = noise.generateNoiseMap (mapChunkSize, mapChunkSize, seed, noiseScale, octaves, persistance, lacunarity, center + offsets, normalizeMode);
         Color[] colourMap =  new Color [mapChunkSize * mapChunkSize];
         for (int x = 0; x < mapChunkSize; x++){
             for (int y = 0; y < mapChunkSize; y++){
                 float currentHeight = noiseMap[x,y];
                 for (int i = 0; i < regions.Length; i++){
-                    if (currentHeight < regions[i].height){
+                    if (currentHeight >= regions[i].height){
                         colourMap[y * mapChunkSize + x] = regions[i].colour;
+                    }else{
                         break;
                     }
                 }
